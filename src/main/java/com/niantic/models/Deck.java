@@ -36,6 +36,11 @@ public class Deck
         return cards.size();
     }
 
+    public ArrayList<Card> getCards()
+    {
+        return cards;
+    }
+
     public Card takeCard()
     {
         Card card = cards.removeFirst();
