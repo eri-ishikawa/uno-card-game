@@ -16,18 +16,18 @@ public class Player
         return name;
     }
 
+    public Hand getHand()
+    {
+        return hand;
+    }
+
     public void dealTo(Card card)
     {
         hand.dealTo(card);
     }
 
-    public int getHandValue()
-    {
-        return hand.getPointValue();
-    }
-
-    public Hand getHand()
-    {
-        return hand;
-    }
+//    public int getHandValue()
+//    {
+//        return hand.getPointValue();
+//    }
 }

@@ -12,7 +12,13 @@ public class Deck
         // build the deck of cards
         cards = new ArrayList<>();
 
-        int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        // initializing an array of numbers 0-9
+        int[] numbers = new int[10];
+        for (int i = 0; i < 10; i++)
+        {
+            numbers[i] = i;
+        }
+
         String[] colors = {"Red", "Blue", "Green", "Yellow"};
 
         for(String color : colors)

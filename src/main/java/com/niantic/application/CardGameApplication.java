@@ -23,7 +23,8 @@ public class CardGameApplication
     {
         deck.shuffle();
 
-        for (int i = 0; i < 2; i++)
+        // each player starts out with 7 cards
+        for (int i = 0; i < 7; i++)
         {
             for(Player player : players)
             {
@@ -35,7 +36,7 @@ public class CardGameApplication
 
     private void addPlayers()
     {
-        players.add(new Player("One"));
-        players.add(new Player("Two"));
+        players.add(new Player("Kirby"));
+        players.add(new Player("Waddle Dee"));
     }
 }

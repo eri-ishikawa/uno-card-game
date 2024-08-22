@@ -16,7 +16,7 @@ public class Card
         return color;
     }
 
-    public int getValue()
+    public int getNumber()
     {
         return number;
     }
