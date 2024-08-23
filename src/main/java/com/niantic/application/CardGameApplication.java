@@ -7,6 +7,8 @@ import com.niantic.models.Player;
 import com.niantic.ui.UserInterface;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class CardGameApplication
 {
@@ -20,12 +22,21 @@ public class CardGameApplication
         dealCards();
 
         UserInterface.displayAllPlayersCards(players);
-        UserInterface.displayCards(deck);
+        UserInterface.displayDeck(deck);
 
         startDiscardPile();
 
         UserInterface.displayDiscardPile(discardPile);
-        UserInterface.displayCards(deck);
+        UserInterface.displayDeck(deck);
+
+        // Testing whether a card is getting discarded properly
+
+//        players.getFirst().getHand().discardCard(discardPile);
+//        UserInterface.displayAllPlayersCards(players);
+//        UserInterface.displayDiscardPile(discardPile);
+
+        // Testing queue
+        takeTurns();
     }
 
     private void dealCards()
@@ -54,5 +65,22 @@ public class CardGameApplication
     {
         players.add(new Player("Kirby"));
         players.add(new Player("Waddle Dee"));
+    }
+
+    private void takeTurns()
+    {
+        Queue<Player> queuedPlayers = new LinkedList<>(players);
+
+        while(!queuedPlayers.isEmpty())
+        {
+            var player = queuedPlayers.poll();
+            System.out.println(player.getName());
+            player.getHand().discardCard(discardPile);
+
+            if(player.getHand().getCardCount() > 0)
+            {
+                queuedPlayers.offer(player);
+            }
+        }
     }
 }

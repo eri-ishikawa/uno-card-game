@@ -27,7 +27,7 @@ public class UserInterface
     }
 
     // This is for my sanity check, to see if cards were properly taken out of the deck
-    public static void displayCards(Deck deck)
+    public static void displayDeck(Deck deck)
     {
         int numOfCards = 1;
 

@@ -11,6 +11,11 @@ public class DiscardPile
         return cards;
     }
 
+    public Card getTopCard()
+    {
+        return cards.getLast();
+    }
+
     public int getCardCount()
     {
         return cards.size();
