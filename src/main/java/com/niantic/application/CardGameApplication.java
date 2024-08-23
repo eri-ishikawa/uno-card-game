@@ -1,13 +1,11 @@
 package com.niantic.application;
 
-import com.niantic.models.Card;
-import com.niantic.models.Deck;
-import com.niantic.models.DiscardPile;
-import com.niantic.models.Player;
+import com.niantic.models.*;
 import com.niantic.ui.UserInterface;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class CardGameApplication
@@ -15,6 +13,7 @@ public class CardGameApplication
     Deck deck = new Deck();
     DiscardPile discardPile = new DiscardPile();
     ArrayList<Player> players = new ArrayList<>();
+    Player winner = new Player("no winner");
     
     public void run()
     {
@@ -37,6 +36,8 @@ public class CardGameApplication
 
         // Testing queue
         takeTurns();
+        UserInterface.displayWinner(winner);
+
     }
 
     private void dealCards()
@@ -75,12 +76,54 @@ public class CardGameApplication
         {
             var player = queuedPlayers.poll();
             System.out.println(player.getName());
-            player.getHand().discardCard(discardPile);
+            discardCard(player.getHand());
+            UserInterface.displayDiscardPile(discardPile);
 
-            if(player.getHand().getCardCount() > 0)
+            // As soon as one player has 0 cards in their hand, we end the game
+            if(player.getHand().getCardCount() == 0)
+            {
+                winner = player;
+                break;
+            }
+            else
             {
                 queuedPlayers.offer(player);
             }
+        }
+    }
+
+    // This is the main action in the game
+    public void discardCard(Hand playerHand)
+    {
+        Card topCard = discardPile.getTopCard();
+
+        // Get a list of all the cards that can be put in the discard pile
+        List<Card> discardableCards = playerHand.getCards().stream()
+                .filter(card -> card.getColor().equals(topCard.getColor())
+                        || card.getNumber() == topCard.getNumber())
+                .toList();
+
+        // If there are no cards that can be put in the discard pile...
+        if(discardableCards.isEmpty())
+        {
+            // Check to see if the deck to draw cards from is empty; if it is, refill the deck
+            if(deck.getCardCount() == 0)
+            {
+                System.out.println("deck is empty! refilling...");
+                deck.refillDeck(discardPile);
+            }
+
+            // Player draws a card from the draw deck and adds it to their hand
+            Card card = deck.takeCard();
+            playerHand.dealTo(card);
+            System.out.println("drew a card because no discardable card. cards left in deck: " + deck.getCardCount());
+        }
+        else
+        {
+            // Player puts one of their discardable cards in the discard pile
+            Card cardToDiscard = discardableCards.getFirst();
+            playerHand.getCards().remove(cardToDiscard);
+            discardPile.addCard(cardToDiscard);
         }
     }
 }

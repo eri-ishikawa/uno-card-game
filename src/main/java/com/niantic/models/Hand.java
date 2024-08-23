@@ -8,7 +8,6 @@ import com.niantic.models.DiscardPile;
 public class Hand
 {
     private final ArrayList<Card> cards = new ArrayList<>();
-    DiscardPile discardPile = new DiscardPile();
 
     public ArrayList<Card> getCards()
     {
@@ -25,19 +24,28 @@ public class Hand
         cards.add(card);
     }
 
-    public void discardCard(DiscardPile discardPile)
-    {
-        Card topCard = discardPile.getTopCard();
-
-        List<Card> discardableCards = cards.stream()
-                                           .filter(card -> card.getColor().equals(topCard.getColor())
-                                                        || card.getNumber() == topCard.getNumber())
-                                           .toList();
-
-        Card cardToDiscard = discardableCards.getFirst();
-        cards.remove(cardToDiscard);
-        discardPile.addCard(cardToDiscard);
-    }
+//    public void discardCard()
+//    {
+//        Card topCard = discardPile.getTopCard();
+//
+//        List<Card> discardableCards = cards.stream()
+//                                           .filter(card -> card.getColor().equals(topCard.getColor())
+//                                                        || card.getNumber() == topCard.getNumber())
+//                                           .toList();
+//
+//        if(discardableCards.isEmpty())
+//        {
+//            Card card = deck.takeCard();
+//            dealTo(card);
+//            System.out.println("drew a card because no discardable card");
+//        }
+//        else
+//        {
+//            Card cardToDiscard = discardableCards.getFirst();
+//            cards.remove(cardToDiscard);
+//            discardPile.addCard(cardToDiscard);
+//        }
+//    }
 
 //    public int getPointValue()
 //    {

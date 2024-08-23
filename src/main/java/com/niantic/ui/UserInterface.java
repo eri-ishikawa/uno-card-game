@@ -35,7 +35,7 @@ public class UserInterface
         System.out.println("Cards in deck");
         System.out.println("-".repeat(15));
 
-        for (Card card : deck.getCards())
+        for (Card card : deck.getDeck())
         {
             System.out.println(numOfCards + "  " + card.getColor() + " " + card.getNumber());
             numOfCards++;
@@ -60,5 +60,12 @@ public class UserInterface
         }
         System.out.println();
         System.out.println("=".repeat(30));
+    }
+
+    public static void displayWinner(Player winner)
+    {
+        System.out.println();
+        System.out.println("Winner: " + winner.getName());
+        System.out.println();
     }
 }
