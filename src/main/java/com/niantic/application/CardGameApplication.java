@@ -3,10 +3,9 @@ package com.niantic.application;
 import com.niantic.models.*;
 import com.niantic.ui.UserInterface;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
+
+import static com.niantic.ui.Helper.getUserString;
 
 public class CardGameApplication
 {
@@ -14,28 +13,23 @@ public class CardGameApplication
     DiscardPile discardPile = new DiscardPile();
     ArrayList<Player> players = new ArrayList<>();
     Player winner = new Player("no winner");
+    public static Scanner userInput = new Scanner(System.in);
     
     public void run()
     {
+        UserInterface.displayIntro();
+
         addPlayers();
+        UserInterface.displayPlayers(players.getFirst().getName(), players.getLast().getName());
+
         dealCards();
-
-        UserInterface.displayAllPlayersCards(players);
-        UserInterface.displayDeck(deck);
-
         startDiscardPile();
 
-        UserInterface.displayDiscardPile(discardPile);
-        UserInterface.displayDeck(deck);
+        UserInterface.displayUserCards(players.getFirst().getHand().getCards());
+        UserInterface.displayTopCardInDiscardPile(discardPile.getTopCard());
 
-        // Testing whether a card is getting discarded properly
-
-//        players.getFirst().getHand().discardCard(discardPile);
-//        UserInterface.displayAllPlayersCards(players);
-//        UserInterface.displayDiscardPile(discardPile);
-
-        // Testing queue
         takeTurns();
+
         UserInterface.displayWinner(winner);
 
     }
@@ -43,6 +37,8 @@ public class CardGameApplication
     private void dealCards()
     {
         deck.shuffle();
+        System.out.println();
+        System.out.println("Deck has been shuffled!");
 
         // each player starts out with 7 cards
         for (int i = 0; i < 7; i++)
@@ -64,8 +60,10 @@ public class CardGameApplication
 
     private void addPlayers()
     {
+        String user = getUserString("Enter your name: ");
+
+        players.add(new Player(user));
         players.add(new Player("Kirby"));
-        players.add(new Player("Waddle Dee"));
     }
 
     private void takeTurns()
@@ -75,9 +73,10 @@ public class CardGameApplication
         while(!queuedPlayers.isEmpty())
         {
             var player = queuedPlayers.poll();
-            System.out.println(player.getName());
-            discardCard(player.getHand());
-            UserInterface.displayDiscardPile(discardPile);
+
+            System.out.println("It's " + player.getName() + "'s turn.");
+
+            discardCard(player);
 
             // As soon as one player has 0 cards in their hand, we end the game
             if(player.getHand().getCardCount() == 0)
@@ -93,12 +92,12 @@ public class CardGameApplication
     }
 
     // This is the main action in the game
-    public void discardCard(Hand playerHand)
+    public void discardCard(Player player)
     {
         Card topCard = discardPile.getTopCard();
 
         // Get a list of all the cards that can be put in the discard pile
-        List<Card> discardableCards = playerHand.getCards().stream()
+        List<Card> discardableCards = player.getHand().getCards().stream()
                 .filter(card -> card.getColor().equals(topCard.getColor())
                         || card.getNumber() == topCard.getNumber())
                 .toList();
@@ -113,16 +112,38 @@ public class CardGameApplication
                 deck.refillDeck(discardPile);
             }
 
-            // Player draws a card from the draw deck and adds it to their hand
+            // Player draws a card from the draw deck
             Card card = deck.takeCard();
-            playerHand.dealTo(card);
-            System.out.println("drew a card because no discardable card. cards left in deck: " + deck.getCardCount());
+
+            // Can the card be immediately played?
+            if(card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber())
+            {
+                discardPile.addCard(card);
+                System.out.println("drew a card that could be immediately played! cards left in deck: " + deck.getCardCount());
+            }
+            else
+            {
+                player.getHand().dealTo(card);
+                System.out.println("drew a card because no discardable card. cards left in deck: " + deck.getCardCount());
+            }
         }
         else
         {
             // Player puts one of their discardable cards in the discard pile
-            Card cardToDiscard = discardableCards.getFirst();
-            playerHand.getCards().remove(cardToDiscard);
+
+            Card cardToDiscard;
+
+            if(player.getName().equals(players.getFirst().getName()))
+            {
+                UserInterface.displayPlayableCards(discardableCards);
+                cardToDiscard = UserInterface.selectPlayableCard(discardableCards);
+            }
+            else
+            {
+                cardToDiscard = discardableCards.getFirst();
+            }
+
+            player.getHand().getCards().remove(cardToDiscard);
             discardPile.addCard(cardToDiscard);
         }
     }
