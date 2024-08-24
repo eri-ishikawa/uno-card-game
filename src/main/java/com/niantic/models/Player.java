@@ -4,10 +4,18 @@ public class Player
 {
     private String name;
     private Hand hand;
+    private boolean isUser;
 
     public Player(String name)
     {
         this.name = name;
+        hand = new Hand();
+    }
+
+    public Player(String name, boolean isUser)
+    {
+        this.name = name;
+        this.isUser = isUser;
         hand = new Hand();
     }
 
@@ -26,8 +34,8 @@ public class Player
         hand.dealTo(card);
     }
 
-//    public int getHandValue()
-//    {
-//        return hand.getPointValue();
-//    }
+    public boolean isUser()
+    {
+        return isUser;
+    }
 }
