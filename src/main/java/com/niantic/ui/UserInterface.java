@@ -91,7 +91,7 @@ public class UserInterface
     public static void displayUserCards(ArrayList<Card> userCards)
     {
         System.out.println();
-        System.out.println("Here are your 7 starting cards:");
+        System.out.println("Here are your current cards:");
         userCards.forEach(card -> System.out.println(card.getNumber() + " " + card.getColor()));
         waitForUser();
     }
@@ -99,12 +99,11 @@ public class UserInterface
     public static void displayTopCardInDiscardPile(Card topCard)
     {
         System.out.println();
-        System.out.println("This is the first card in the discard pile: ");
+        System.out.print("Top card in the discard pile: ");
         System.out.println(topCard.getNumber() + " " + topCard.getColor());
-        waitForUser();
     }
 
-    public static void displayPlayableCards(List<Card> playableCards)
+    public static void displayUserPlayableCards(List<Card> playableCards)
     {
         System.out.println();
         System.out.println("These are the cards you can play: ");
@@ -118,13 +117,33 @@ public class UserInterface
         }
     }
 
-    public static Card selectPlayableCard(List<Card> playableCards)
+    public static Card selectUserPlayableCard(List<Card> playableCards)
     {
-        // In displayPlayableCards, I added i + 1 for an aesthetic reason, so here we
+        // In displayUserPlayableCards, I added i + 1 for an aesthetic reason, so here we
         // revert it back (i - 1) for functional reasons
 
         System.out.println();
-        int chosenCard = getUserInt("Type the number of the card you'd like to play, and press ENTER: ") - 1;
+        int chosenCard = getUserInt("Type the number on the list of the card you'd like to play, and press ENTER: ") - 1;
         return playableCards.get(chosenCard);
+    }
+
+    public static void displayCardToPlay(String playerName, Card cardToPlay)
+    {
+        System.out.println();
+        System.out.println(playerName + " added " + cardToPlay.getNumber() + " " + cardToPlay.getColor() + " to the discard pile.");
+        waitForUser();
+    }
+
+    public static void displayPlayerTurn(String playerName)
+    {
+        System.out.println();
+        System.out.println("It's " + playerName + "'s turn.");
+    }
+
+    public static String displayOptionToPlayDrawnCard(Card card)
+    {
+        System.out.println();
+        System.out.println("You drew " + card.getNumber() + " " + card.getColor());
+        return getUserString("This card can be placed. Would you like to play the card? (y/n): ");
     }
 }
