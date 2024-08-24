@@ -2,7 +2,7 @@ package com.niantic.models;
 
 public class Card
 {
-    private String color;
+    protected String color;
     private int number;
 
     public Card(String color, int number)
@@ -19,5 +19,10 @@ public class Card
     public int getNumber()
     {
         return number;
+    }
+
+    public String toString()
+    {
+        return number + " " + color;
     }
 }

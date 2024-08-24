@@ -22,7 +22,7 @@ public class UserInterface
             System.out.println(player.getName());
             for (Card card : player.getHand().getCards())
             {
-                System.out.println("  " + card.getColor() + " " + card.getNumber());
+                System.out.println("  " + card.toString());
             }
             System.out.println();
         }
@@ -40,7 +40,7 @@ public class UserInterface
 
         for (Card card : deck.getDeck())
         {
-            System.out.println(numOfCards + "  " + card.getColor() + " " + card.getNumber());
+            System.out.println(numOfCards + "  " + card.toString());
             numOfCards++;
         }
         System.out.println();
@@ -58,7 +58,7 @@ public class UserInterface
 
         for (Card card : discardPile.getCards())
         {
-            System.out.println(numOfCards + "  " + card.getColor() + " " + card.getNumber());
+            System.out.println(numOfCards + "  " + card.toString());
             numOfCards++;
         }
         System.out.println();
@@ -92,7 +92,7 @@ public class UserInterface
     {
         System.out.println();
         System.out.println("Here are your current cards:");
-        userCards.forEach(card -> System.out.println(card.getNumber() + " " + card.getColor()));
+        userCards.forEach(card -> System.out.println(card.toString()));
         waitForUser();
     }
 
@@ -100,7 +100,7 @@ public class UserInterface
     {
         System.out.println();
         System.out.print("Top card in the discard pile: ");
-        System.out.println(topCard.getNumber() + " " + topCard.getColor());
+        System.out.println(topCard.toString());
     }
 
     public static void displayUserPlayableCards(List<Card> playableCards)
@@ -113,7 +113,7 @@ public class UserInterface
             // the user can select a choice of "0"
 
             System.out.print((i + 1) + ". ");
-            System.out.println(playableCards.get(i).getNumber() + " " + playableCards.get(i).getColor());
+            System.out.println(playableCards.get(i).toString());
         }
     }
 
@@ -130,7 +130,7 @@ public class UserInterface
     public static void displayCardToPlay(String playerName, Card cardToPlay)
     {
         System.out.println();
-        System.out.println(playerName + " added " + cardToPlay.getNumber() + " " + cardToPlay.getColor() + " to the discard pile.");
+        System.out.println(playerName + " added " + cardToPlay.toString() + " to the discard pile.");
         waitForUser();
     }
 
@@ -143,7 +143,7 @@ public class UserInterface
     public static String displayOptionToPlayDrawnCard(Card card)
     {
         System.out.println();
-        System.out.println("You drew " + card.getNumber() + " " + card.getColor());
+        System.out.println("You drew " + card.toString());
         return getUserString("This card can be placed. Would you like to play the card? (y/n): ");
     }
 }
