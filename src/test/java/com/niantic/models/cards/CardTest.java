@@ -1,6 +1,5 @@
-package com.niantic.models;
+package com.niantic.models.cards;
 
-import com.niantic.models.cards.Card;
 import com.niantic.ui.ColorCodes;
 import org.junit.jupiter.api.Test;
 
