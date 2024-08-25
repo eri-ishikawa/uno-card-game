@@ -29,7 +29,6 @@ public class CardGameApplication
         takeTurns();
 
         UserInterface.displayWinner(winner);
-
     }
 
     private void dealCards()

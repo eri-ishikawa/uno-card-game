@@ -1,5 +1,7 @@
 package com.niantic.models.cards;
 
+import com.niantic.ui.ColorCodes;
+
 public class ActionCard extends Card
 {
     private String actionType;
@@ -18,6 +20,15 @@ public class ActionCard extends Card
     @Override
     public String toString()
     {
-        return actionType + " " + color;
+        String colorCode = "";
+
+        switch(color)
+        {
+            case "Red" -> colorCode = ColorCodes.RED;
+            case "Blue" -> colorCode = ColorCodes.CYAN;
+            case "Green" -> colorCode = ColorCodes.GREEN;
+            case "Yellow" -> colorCode = ColorCodes.YELLOW;
+        }
+        return colorCode + actionType + " " + color + ColorCodes.RESET;
     }
 }

@@ -1,5 +1,7 @@
 package com.niantic.models.cards;
 
+import com.niantic.ui.ColorCodes;
+
 public class Card
 {
     protected String color;
@@ -23,7 +25,16 @@ public class Card
 
     public String toString()
     {
-        return number + " " + color;
+        String colorCode = "";
+
+        switch(color)
+        {
+            case "Red" -> colorCode = ColorCodes.RED;
+            case "Blue" -> colorCode = ColorCodes.CYAN;
+            case "Green" -> colorCode = ColorCodes.GREEN;
+            case "Yellow" -> colorCode = ColorCodes.YELLOW;
+        }
+        return colorCode + number + " " + color + ColorCodes.RESET;
     }
 
 
