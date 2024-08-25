@@ -188,6 +188,11 @@ public class CardGameApplication
             discardPile.addCard(card);
             System.out.println(player.getName() + " played the card that they drew.");
         }
+
+        if(card instanceof ActionCard)
+        {
+            activateActionCard();
+        }
     }
 
     public void drawTwoCards(Player player)
@@ -243,19 +248,23 @@ public class CardGameApplication
     public void activateActionCard()
     {
         String actionType = ((ActionCard)discardPile.getTopCard()).getActionType();
-        Player skippedPlayer = null;
 
         if(actionType.equals("Skip"))
         {
-            skippedPlayer = queuedPlayers.poll();
+            Player skippedPlayer = queuedPlayers.poll();
             System.out.println("Skipped " + skippedPlayer.getName() + "'s turn.");
+            queuedPlayers.offer(skippedPlayer);
         }
         else if(actionType.equals("Draw Two"))
         {
-            skippedPlayer = queuedPlayers.poll();
+            Player skippedPlayer = queuedPlayers.poll();
             System.out.println(skippedPlayer.getName() + " will draw two cards and skip their turn.");
             drawTwoCards(skippedPlayer);
+            queuedPlayers.offer(skippedPlayer);
         }
-        queuedPlayers.offer(skippedPlayer);
+        else if(actionType.equals("Wild"))
+        {
+            System.out.println();
+        }
     }
 }
