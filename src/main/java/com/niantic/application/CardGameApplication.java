@@ -90,8 +90,23 @@ public class CardGameApplication
         var topCard = discardPile.getTopCard();
         var playerCards = player.getHand().getCards();
 
+        ArrayList<Card> playableCards = getAllPlayableCards(topCard, playerCards);
+
         UserInterface.displayTopCardInDiscardPile(topCard);
 
+        // Are there cards that can be played?
+        if(playableCards.isEmpty())
+        {
+            drawCard(player, topCard);
+        }
+        else
+        {
+            discardCard(player, playableCards);
+        }
+    }
+
+    public ArrayList<Card> getAllPlayableCards(Card topCard, ArrayList<Card> playerCards)
+    {
         // Get a list of all the color cards that can be put in the discard pile
         // Used a hash set in case I get dupes in the list
         Set<Card> initialPlayableCards = new HashSet<>();
@@ -117,17 +132,7 @@ public class CardGameApplication
             }
         }
 
-        ArrayList<Card> playableCards = new ArrayList<>(initialPlayableCards);
-
-        // Are there cards that can be played?
-        if(playableCards.isEmpty())
-        {
-            drawCard(player, topCard);
-        }
-        else
-        {
-            discardCard(player, playableCards);
-        }
+        return new ArrayList<>(initialPlayableCards);
     }
 
     public void drawCard(Player player, Card topCard)
@@ -147,37 +152,42 @@ public class CardGameApplication
         // Can the card be immediately played?
         if(card.getColor().equals(topCard.getColor()))
         {
-            if(player.isUser())
-            {
-                String choice = UserInterface.displayOptionToPlayDrawnCard(card);
-
-                if(!choice.equals("y") && !choice.equals("n"))
-                {
-                    System.out.println("Please enter a valid response.");
-                    UserInterface.displayOptionToPlayDrawnCard(card);
-                }
-
-                if (choice.equals("y"))
-                {
-                    discardPile.addCard(card);
-                    System.out.println("You played the card that you drew.");
-                }
-                else if(choice.equals("n"))
-                {
-                    System.out.println("You chose not to play the card.");
-                }
-            }
-            else
-            {
-                discardPile.addCard(card);
-                System.out.println(player.getName() + " played the card that they drew.");
-            }
+            playDrawnCard(player);
         }
         else
         {
             player.getHand().dealTo(card);
         }
         queuedPlayers.offer(player);
+    }
+
+    public void playDrawnCard(Player player)
+    {
+        if(player.isUser())
+        {
+            String choice = UserInterface.displayOptionToPlayDrawnCard(card);
+
+            if(!choice.equals("y") && !choice.equals("n"))
+            {
+                System.out.println("Please enter a valid response.");
+                UserInterface.displayOptionToPlayDrawnCard(card);
+            }
+
+            if (choice.equals("y"))
+            {
+                discardPile.addCard(card);
+                System.out.println("You played the card that you drew.");
+            }
+            else if(choice.equals("n"))
+            {
+                System.out.println("You chose not to play the card.");
+            }
+        }
+        else
+        {
+            discardPile.addCard(card);
+            System.out.println(player.getName() + " played the card that they drew.");
+        }
     }
 
     public void drawTwoCards(Player player)
@@ -193,7 +203,6 @@ public class CardGameApplication
             card = deck.takeCard();
             player.getHand().dealTo(card);
         }
-
         Card card = deck.takeCard();
         player.getHand().dealTo(card);
 
@@ -227,11 +236,11 @@ public class CardGameApplication
 
         if(cardToDiscard instanceof ActionCard)
         {
-            playActionCard();
+            activateActionCard();
         }
     }
 
-    public void playActionCard()
+    public void activateActionCard()
     {
         String actionType = ((ActionCard)discardPile.getTopCard()).getActionType();
         Player skippedPlayer = null;
