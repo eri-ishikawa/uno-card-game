@@ -7,6 +7,7 @@ import com.niantic.models.Deck;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.niantic.ui.Helper.*;
 
@@ -103,9 +104,8 @@ public class UserInterface
         System.out.println(topCard.toString());
     }
 
-    public static void displayUserPlayableCards(List<Card> playableCards)
+    public static void displayUserPlayableCards(ArrayList<Card> playableCards)
     {
-        System.out.println();
         System.out.println("These are the cards you can play: ");
         for (int i = 0; i < playableCards.size(); i++)
         {
@@ -117,13 +117,24 @@ public class UserInterface
         }
     }
 
-    public static Card selectUserPlayableCard(List<Card> playableCards)
+    public static Card selectUserPlayableCard(ArrayList<Card> playableCards)
     {
         // In displayUserPlayableCards, I added i + 1 for an aesthetic reason, so here we
         // revert it back (i - 1) for functional reasons
 
         System.out.println();
-        int chosenCard = getUserInt("Type the number on the list of the card you'd like to play, and press ENTER: ") - 1;
+        int chosenCard = 0;
+
+        try
+        {
+            chosenCard = getUserInt("Type the number on the list of the card you'd like to play, and press ENTER: ") - 1;
+        }
+        catch(Exception e)
+        {
+            System.out.println();
+            System.out.println("Please enter a valid response.");
+            selectUserPlayableCard(playableCards);
+        }
         return playableCards.get(chosenCard);
     }
 
@@ -136,7 +147,7 @@ public class UserInterface
 
     public static void displayPlayerTurn(String playerName)
     {
-        System.out.println();
+        System.out.println("-".repeat(20));
         System.out.println("It's " + playerName + "'s turn.");
     }
 

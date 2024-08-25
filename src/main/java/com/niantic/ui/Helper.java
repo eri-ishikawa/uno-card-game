@@ -9,6 +9,7 @@ public class Helper
         System.out.println();
         System.out.print("Press ENTER to continue >");
         userInput.nextLine();
+        System.out.println();
     }
 
     public static String getUserString(String message)

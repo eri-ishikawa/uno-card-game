@@ -2,7 +2,6 @@ package com.niantic.application;
 
 import com.niantic.models.*;
 import com.niantic.ui.UserInterface;
-
 import java.util.*;
 
 import static com.niantic.ui.Helper.getUserString;
@@ -14,6 +13,7 @@ public class CardGameApplication
     ArrayList<Player> players = new ArrayList<>();
     Player winner = new Player("no winner");
     public static Scanner userInput = new Scanner(System.in);
+    Queue<Player> queuedPlayers = new LinkedList<>();
     
     public void run()
     {
@@ -34,7 +34,6 @@ public class CardGameApplication
     {
         int numOfStartingCards = 7;
         deck.shuffle();
-        System.out.println();
         System.out.println("Deck has been shuffled!");
 
         // each player starts out with 7 cards
@@ -61,12 +60,13 @@ public class CardGameApplication
 
         players.add(new Player(user, true));
         players.add(new Player("Kirby"));
+
+        queuedPlayers.add(players.getFirst());
+        queuedPlayers.add(players.getLast());
     }
 
     private void takeTurns()
     {
-        Queue<Player> queuedPlayers = new LinkedList<>(players);
-
         while(!queuedPlayers.isEmpty())
         {
             var player = queuedPlayers.poll();
@@ -81,33 +81,52 @@ public class CardGameApplication
                 winner = player;
                 break;
             }
-            else
-            {
-                queuedPlayers.offer(player);
-            }
         }
     }
 
     // This is the main action in the game
     public void playerTurn(Player player)
     {
-        Card topCard = discardPile.getTopCard();
+        var topCard = discardPile.getTopCard();
+        var playerCards = player.getHand().getCards();
+
         UserInterface.displayTopCardInDiscardPile(topCard);
 
-        // Get a list of all the cards that can be put in the discard pile
-        List<Card> discardableCards = player.getHand().getCards().stream()
-                .filter(card -> card.getColor().equals(topCard.getColor())
-                        || card.getNumber() == topCard.getNumber())
-                .toList();
+        // Get a list of all the color cards that can be put in the discard pile
+        // Used a hash set in case I get dupes in the list
+        Set<Card> initialPlayableCards = new HashSet<>();
 
-        // If there are no cards that can be put in the discard pile...
-        if(discardableCards.isEmpty())
+        for(Card card : playerCards)
+        {
+            if(card.getColor().equals(topCard.getColor()))
+            {
+                initialPlayableCards.add(card);
+            }
+
+            if(card instanceof ActionCard && topCard instanceof ActionCard)
+            {
+                if(((ActionCard) card).getActionType().equals(((ActionCard) topCard).getActionType()))
+                {
+                    initialPlayableCards.add(card);
+                }
+            }
+
+            if(card.getNumber() != -1 && card.getNumber() == topCard.getNumber())
+            {
+                initialPlayableCards.add(card);
+            }
+        }
+
+        ArrayList<Card> playableCards = new ArrayList<>(initialPlayableCards);
+
+        // Are there cards that can be played?
+        if(playableCards.isEmpty())
         {
             drawCard(player, topCard);
         }
         else
         {
-            discardCard(player, discardableCards);
+            discardCard(player, playableCards);
         }
     }
 
@@ -125,7 +144,7 @@ public class CardGameApplication
         System.out.println(player.getName() + " drew a card because they didn't have any cards to play.");
 
         // Can the card be immediately played?
-        if(card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber())
+        if(card.getColor().equals(topCard.getColor()))
         {
             if(player.isUser())
             {
@@ -150,9 +169,31 @@ public class CardGameApplication
         {
             player.getHand().dealTo(card);
         }
+        queuedPlayers.offer(player);
     }
 
-    public void discardCard(Player player, List<Card> discardableCards)
+    public void drawTwoCards(Player player)
+    {
+        if(deck.getCardCount() == 1)
+        {
+            Card card = deck.takeCard();
+            player.getHand().dealTo(card);
+
+            System.out.println("The draw deck is empty! Refilling...");
+            deck.refillDeck(discardPile);
+
+            card = deck.takeCard();
+            player.getHand().dealTo(card);
+        }
+
+        Card card = deck.takeCard();
+        player.getHand().dealTo(card);
+
+        card = deck.takeCard();
+        player.getHand().dealTo(card);
+    }
+
+    public void discardCard(Player player, ArrayList<Card> playableCards)
     {
         // Player puts one of their playable cards in the discard pile
 
@@ -161,16 +202,43 @@ public class CardGameApplication
         if(player.isUser())
         {
             UserInterface.displayUserCards(player.getHand().getCards());
-            UserInterface.displayUserPlayableCards(discardableCards);
-            cardToDiscard = UserInterface.selectUserPlayableCard(discardableCards);
+            UserInterface.displayUserPlayableCards(playableCards);
+            cardToDiscard = UserInterface.selectUserPlayableCard(playableCards);
         }
         else
         {
-            cardToDiscard = discardableCards.getFirst();
+            Collections.shuffle(playableCards);
+            cardToDiscard = playableCards.getFirst();
         }
 
         player.getHand().getCards().remove(cardToDiscard);
         discardPile.addCard(cardToDiscard);
+
         UserInterface.displayCardToPlay(player.getName(), cardToDiscard);
+        queuedPlayers.offer(player);
+
+        if(cardToDiscard instanceof ActionCard)
+        {
+            playActionCard();
+        }
+    }
+
+    public void playActionCard()
+    {
+        String actionType = ((ActionCard)discardPile.getTopCard()).getActionType();
+        Player skippedPlayer = null;
+
+        if(actionType.equals("Skip"))
+        {
+            skippedPlayer = queuedPlayers.poll();
+            System.out.println("Skipped " + skippedPlayer.getName() + "'s turn.");
+        }
+        else if(actionType.equals("Draw Two"))
+        {
+            skippedPlayer = queuedPlayers.poll();
+            System.out.println(skippedPlayer.getName() + " will draw two cards and skip their turn.");
+            drawTwoCards(skippedPlayer);
+        }
+        queuedPlayers.offer(skippedPlayer);
     }
 }

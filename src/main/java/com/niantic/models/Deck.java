@@ -20,13 +20,19 @@ public class Deck
         }
 
         String[] colors = {"Red", "Blue", "Green", "Yellow"};
+        String[] actionTypes = {"Skip", "Draw Two"};
+        String cardType;
 
         for(String color : colors)
         {
             for(int number : numbers)
             {
-                Card card = new Card(color,number);
-                deck.add(card);
+                deck.add(new Card(color, number));
+            }
+
+            for(String actionType : actionTypes)
+            {
+                deck.add(new ActionCard(color, actionType));
             }
         }
     }
