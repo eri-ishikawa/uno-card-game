@@ -147,7 +147,7 @@ public class CardGameApplication
         // Player draws a card from the draw deck
         Card card = deck.takeCard();
         System.out.println();
-        System.out.println(player.getName() + " drew a card because they didn't have any cards to play.");
+        System.out.println(player.getName() + " drew a card because they didn't have any cards to play. Womp womp.");
 
         // Can the card be immediately played?
         if(card.getColor().equals(topCard.getColor()))

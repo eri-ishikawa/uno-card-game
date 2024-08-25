@@ -152,7 +152,7 @@ public class UserInterface
     public static String displayOptionToPlayDrawnCard(Card card)
     {
         System.out.println();
-        System.out.println("You drew " + card.toString());
+        System.out.println("You drew " + card.toString() + ".");
         return getUserString("This card can be placed. Would you like to play the card? (y/n): ");
     }
 }
