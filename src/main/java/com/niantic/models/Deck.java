@@ -1,5 +1,8 @@
 package com.niantic.models;
 
+import com.niantic.models.cards.ActionCard;
+import com.niantic.models.cards.Card;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -21,7 +24,6 @@ public class Deck
 
         String[] colors = {"Red", "Blue", "Green", "Yellow"};
         String[] actionTypes = {"Skip", "Draw Two"};
-        String cardType;
 
         for(String color : colors)
         {

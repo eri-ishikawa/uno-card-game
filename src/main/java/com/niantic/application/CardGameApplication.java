@@ -1,6 +1,8 @@
 package com.niantic.application;
 
 import com.niantic.models.*;
+import com.niantic.models.cards.ActionCard;
+import com.niantic.models.cards.Card;
 import com.niantic.ui.UserInterface;
 import java.util.*;
 
@@ -141,6 +143,7 @@ public class CardGameApplication
 
         // Player draws a card from the draw deck
         Card card = deck.takeCard();
+        System.out.println();
         System.out.println(player.getName() + " drew a card because they didn't have any cards to play.");
 
         // Can the card be immediately played?

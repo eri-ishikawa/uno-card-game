@@ -1,5 +1,7 @@
 package com.niantic.models;
 
+import com.niantic.models.cards.Card;
+
 import java.util.ArrayList;
 
 public class DiscardPile

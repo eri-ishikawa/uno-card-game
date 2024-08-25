@@ -1,9 +1,8 @@
 package com.niantic.models;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import com.niantic.models.DiscardPile;
+import com.niantic.models.cards.Card;
 
 public class Hand
 {

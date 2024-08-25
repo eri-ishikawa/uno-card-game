@@ -1,13 +1,11 @@
 package com.niantic.ui;
 
-import com.niantic.models.Card;
+import com.niantic.models.cards.Card;
 import com.niantic.models.DiscardPile;
 import com.niantic.models.Player;
 import com.niantic.models.Deck;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import static com.niantic.ui.Helper.*;
 

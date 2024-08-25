@@ -1,4 +1,4 @@
-package com.niantic.models;
+package com.niantic.models.cards;
 
 public class Card
 {
