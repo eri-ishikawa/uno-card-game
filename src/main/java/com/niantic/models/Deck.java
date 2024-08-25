@@ -13,11 +13,11 @@ public class Deck
     public Deck()
     {
         // build the deck of deck
-        deck = new ArrayList<>();
+        deck = new ArrayList<>(92);
 
-        // initializing an array of numbers 0-9
-        int[] numbers = new int[10];
-        for (int i = 0; i < 10; i++)
+        // initializing an array of numbers 1-9
+        int[] numbers = new int[9];
+        for (int i = 1; i < 9; i++)
         {
             numbers[i] = i;
         }
@@ -27,13 +27,20 @@ public class Deck
 
         for(String color : colors)
         {
+            // There's only one of each color 0 cards
+            deck.add(new Card(color, 0));
+
             for(int number : numbers)
             {
+                // There are two of each number card
+                deck.add(new Card(color, number));
                 deck.add(new Card(color, number));
             }
 
             for(String actionType : actionTypes)
             {
+                // There are two of each action card
+                deck.add(new ActionCard(color, actionType));
                 deck.add(new ActionCard(color, actionType));
             }
         }

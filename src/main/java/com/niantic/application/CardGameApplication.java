@@ -151,6 +151,13 @@ public class CardGameApplication
             if(player.isUser())
             {
                 String choice = UserInterface.displayOptionToPlayDrawnCard(card);
+
+                if(!choice.equals("y") && !choice.equals("n"))
+                {
+                    System.out.println("Please enter a valid response.");
+                    UserInterface.displayOptionToPlayDrawnCard(card);
+                }
+
                 if (choice.equals("y"))
                 {
                     discardPile.addCard(card);
