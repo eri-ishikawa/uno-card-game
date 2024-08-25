@@ -65,7 +65,7 @@ public class CardGameApplication
         queuedPlayers = new LinkedList<>(players);
     }
 
-    private void takeTurns()
+    public void takeTurns()
     {
         while(!queuedPlayers.isEmpty())
         {

@@ -30,7 +30,7 @@ class CardGameApplicationTest
     }
 
     @Test
-    public void dealCards_shouldGiveEachPlayer_7Cards()
+    public void dealCards_shouldGiveEachPlayer7Cards()
     {
         // arrange
         int expectedCardCount = 7;
