@@ -152,7 +152,7 @@ public class CardGameApplication
         // Can the card be immediately played?
         if(card.getColor().equals(topCard.getColor()))
         {
-            playDrawnCard(player);
+            playDrawnCard(player, card);
         }
         else
         {
@@ -161,7 +161,7 @@ public class CardGameApplication
         queuedPlayers.offer(player);
     }
 
-    public void playDrawnCard(Player player)
+    public void playDrawnCard(Player player, Card card)
     {
         if(player.isUser())
         {
