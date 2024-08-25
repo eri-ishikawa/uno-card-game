@@ -264,7 +264,7 @@ public class CardGameApplication
         }
         else if(actionType.equals("Wild"))
         {
-            System.out.println();
+            System.out.println("");
         }
     }
 }
