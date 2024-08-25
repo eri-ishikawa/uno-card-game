@@ -25,8 +25,8 @@ class CardGameApplicationTest
         players = new ArrayList<>();
         cardGameApplication = new CardGameApplication();
 
-        players.add(new Player("User", true));
-        players.add(new Player("Opponent"));
+        cardGameApplication.players.add(new Player("User", true));
+        cardGameApplication.players.add(new Player("Opponent"));
     }
 
     @Test
@@ -37,8 +37,9 @@ class CardGameApplicationTest
 
         // act
         cardGameApplication.dealCards();
+        int actualCardCount = cardGameApplication.players.getFirst().getHand().getCardCount();
 
         // assert
-        assertEquals(expectedCardCount, actualCardCount, "Because it should have generated 7 cards for each player.")
+        assertEquals(expectedCardCount, actualCardCount, "Because it should have generated 7 cards for each player.");
     }
 }
