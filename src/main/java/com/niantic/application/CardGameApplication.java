@@ -15,7 +15,7 @@ public class CardGameApplication
     ArrayList<Player> players = new ArrayList<>();
     Player winner = new Player("no winner");
     public static Scanner userInput = new Scanner(System.in);
-    Queue<Player> queuedPlayers = new LinkedList<>();
+    Queue<Player> queuedPlayers;
     
     public void run()
     {
@@ -31,7 +31,7 @@ public class CardGameApplication
         UserInterface.displayWinner(winner);
     }
 
-    private void dealCards()
+    public void dealCards()
     {
         int numOfStartingCards = 7;
         deck.shuffle();
@@ -62,8 +62,7 @@ public class CardGameApplication
         players.add(new Player(user, true));
         players.add(new Player("Kirby"));
 
-        queuedPlayers.add(players.getFirst());
-        queuedPlayers.add(players.getLast());
+        queuedPlayers = new LinkedList<>(players);
     }
 
     private void takeTurns()
