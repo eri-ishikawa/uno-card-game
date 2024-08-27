@@ -17,6 +17,11 @@ public class ActionCard extends Card
         return actionType;
     }
 
+    public void setColor(String color)
+    {
+        this.color = color;
+    }
+
     @Override
     public String toString()
     {

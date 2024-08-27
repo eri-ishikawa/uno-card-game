@@ -153,6 +153,57 @@ public class UserInterface
     {
         System.out.println();
         System.out.println("You drew " + card.toString() + ".");
-        return getUserString("This card can be placed. Would you like to play the card? (y/n): ");
+        String choice = getUserString("This card can be placed. Would you like to play the card? (y/n): ");
+
+        if(!choice.equals("y") && !choice.equals("n"))
+        {
+            System.out.println("Please enter a valid response.");
+            displayOptionToPlayDrawnCard(card);
+        }
+
+        if(choice.equals("y"))
+        {
+            System.out.println("You played the card that you drew.");
+        }
+        else if(choice.equals("n"))
+        {
+            System.out.println("You chose not to play the card.");
+        }
+
+        return choice;
+    }
+
+    public static String selectWildCardColor()
+    {
+        int choice = 0;
+        String chosenColor = "";
+
+        System.out.println();
+        System.out.println("Which color would you like to declare?");
+        System.out.println("1. Red");
+        System.out.println("2. Blue");
+        System.out.println("3. Green");
+        System.out.println("4. Yellow");
+
+        try
+        {
+            choice = getUserInt("Enter the number of the color you'd like to declare.");
+
+            switch(choice)
+            {
+                case 1 -> chosenColor = "Red";
+                case 2 -> chosenColor = "Blue";
+                case 3 -> chosenColor = "Green";
+                case 4 -> chosenColor = "Yellow";
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println();
+            System.out.println("Please enter a valid response.");
+            selectWildCardColor();
+        }
+
+        return chosenColor;
     }
 }

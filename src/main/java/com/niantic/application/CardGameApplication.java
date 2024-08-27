@@ -101,7 +101,7 @@ public class CardGameApplication
         }
         else
         {
-            discardCard(player, playableCards);
+            playCard(player, playableCards);
         }
     }
 
@@ -167,20 +167,9 @@ public class CardGameApplication
         {
             String choice = UserInterface.displayOptionToPlayDrawnCard(card);
 
-            if(!choice.equals("y") && !choice.equals("n"))
-            {
-                System.out.println("Please enter a valid response.");
-                UserInterface.displayOptionToPlayDrawnCard(card);
-            }
-
-            if (choice.equals("y"))
+            if(choice.equals("y"))
             {
                 discardPile.addCard(card);
-                System.out.println("You played the card that you drew.");
-            }
-            else if(choice.equals("n"))
-            {
-                System.out.println("You chose not to play the card.");
             }
         }
         else
@@ -191,7 +180,7 @@ public class CardGameApplication
 
         if(card instanceof ActionCard)
         {
-            activateActionCard();
+            activateActionCard(player, card);
         }
     }
 
@@ -215,56 +204,73 @@ public class CardGameApplication
         player.getHand().dealTo(card);
     }
 
-    public void discardCard(Player player, ArrayList<Card> playableCards)
+    public void playCard(Player player, ArrayList<Card> playableCards)
     {
         // Player puts one of their playable cards in the discard pile
 
-        Card cardToDiscard;
+        Card cardToPlay;
 
         if(player.isUser())
         {
             UserInterface.displayUserCards(player.getHand().getCards());
             UserInterface.displayUserPlayableCards(playableCards);
-            cardToDiscard = UserInterface.selectUserPlayableCard(playableCards);
+            cardToPlay = UserInterface.selectUserPlayableCard(playableCards);
         }
         else
         {
             Collections.shuffle(playableCards);
-            cardToDiscard = playableCards.getFirst();
+            cardToPlay = playableCards.getFirst();
         }
 
-        player.getHand().getCards().remove(cardToDiscard);
-        discardPile.addCard(cardToDiscard);
+        player.getHand().getCards().remove(cardToPlay);
+        discardPile.addCard(cardToPlay);
 
-        UserInterface.displayCardToPlay(player.getName(), cardToDiscard);
+        UserInterface.displayCardToPlay(player.getName(), cardToPlay);
         queuedPlayers.offer(player);
 
-        if(cardToDiscard instanceof ActionCard)
+        if(cardToPlay instanceof ActionCard)
         {
-            activateActionCard();
+            activateActionCard(player, cardToPlay);
         }
     }
 
-    public void activateActionCard()
+    public void activateActionCard(Player player, Card card)
     {
-        String actionType = ((ActionCard)discardPile.getTopCard()).getActionType();
+        String actionType = ((ActionCard)card).getActionType();
 
-        if(actionType.equals("Skip"))
+        switch (actionType)
         {
-            Player skippedPlayer = queuedPlayers.poll();
-            System.out.println("Skipped " + skippedPlayer.getName() + "'s turn.");
-            queuedPlayers.offer(skippedPlayer);
-        }
-        else if(actionType.equals("Draw Two"))
-        {
-            Player skippedPlayer = queuedPlayers.poll();
-            System.out.println(skippedPlayer.getName() + " will draw two cards and skip their turn.");
-            drawTwoCards(skippedPlayer);
-            queuedPlayers.offer(skippedPlayer);
-        }
-        else if(actionType.equals("Wild"))
-        {
-            System.out.println("");
+            case "Skip" ->
+            {
+                Player skippedPlayer = queuedPlayers.poll();
+                System.out.println("Skipped " + skippedPlayer.getName() + "'s turn.");
+                queuedPlayers.offer(skippedPlayer);
+            }
+            case "Draw Two" ->
+            {
+                Player skippedPlayer = queuedPlayers.poll();
+                System.out.println(skippedPlayer.getName() + " will draw two cards and skip their turn.");
+                drawTwoCards(skippedPlayer);
+                queuedPlayers.offer(skippedPlayer);
+            }
+            case "Wild" ->
+            {
+                String chosenColor;
+
+                if (player.isUser())
+                {
+                    chosenColor = UserInterface.selectWildCardColor();
+                }
+                else
+                {
+                    ArrayList<Card> opponentCards = players.getLast().getHand().getCards();
+                    chosenColor = opponentCards.getFirst().getColor();
+
+                    // BUG: chosen color for opponent is random, so it could be another wild card.
+                }
+
+                ((ActionCard) card).setColor(chosenColor);
+            }
         }
     }
 }
