@@ -37,7 +37,6 @@ public class CardGameApplication
         deck.shuffle();
         System.out.println("Deck has been shuffled!");
 
-        // each player starts out with 7 cards
         for (int i = 0; i < numOfStartingCards; i++)
         {
             for(Player player : players)
@@ -48,7 +47,6 @@ public class CardGameApplication
         }
     }
 
-    // This is the first card that will be put down to start the game.
     private void startDiscardPile()
     {
         Card card = deck.takeCard();
@@ -75,7 +73,6 @@ public class CardGameApplication
 
             playerTurn(player);
 
-            // As soon as one player has 0 cards in their hand, we end the game
             if(player.getHand().getCardCount() == 0)
             {
                 winner = player;
