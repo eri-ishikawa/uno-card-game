@@ -101,7 +101,8 @@ public class CardGameApplication
         }
         else
         {
-            playCard(player, playableCards);
+            Card cardToPlay = determineWhichCardToPlay(player, playableCards);
+            playCard(player, cardToPlay);
         }
     }
 
@@ -204,10 +205,8 @@ public class CardGameApplication
         player.getHand().dealTo(card);
     }
 
-    public void playCard(Player player, ArrayList<Card> playableCards)
+    public Card determineWhichCardToPlay(Player player, ArrayList<Card> playableCards)
     {
-        // Player puts one of their playable cards in the discard pile
-
         Card cardToPlay;
 
         if(player.isUser())
@@ -221,7 +220,11 @@ public class CardGameApplication
             Collections.shuffle(playableCards);
             cardToPlay = playableCards.getFirst();
         }
+        return cardToPlay;
+    }
 
+    public void playCard(Player player, Card cardToPlay)
+    {
         player.getHand().getCards().remove(cardToPlay);
         discardPile.addCard(cardToPlay);
 
