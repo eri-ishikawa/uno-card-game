@@ -104,11 +104,12 @@ public class CardGameApplication
             Card cardToPlay = determineWhichCardToPlay(player, playableCards);
             playCard(player, cardToPlay);
         }
+        // BUG: If I'm skipped, will I be properly added back to the queue?
+        queuedPlayers.offer(player);
     }
 
     public ArrayList<Card> getAllPlayableCards(Card topCard, ArrayList<Card> playerCards)
     {
-        // Get a list of all the color cards that can be put in the discard pile
         // Used a hash set in case I get dupes in the list
         Set<Card> initialPlayableCards = new HashSet<>();
 
@@ -159,7 +160,6 @@ public class CardGameApplication
         {
             player.getHand().dealTo(card);
         }
-        queuedPlayers.offer(player);
     }
 
     public void playDrawnCard(Player player, Card card)
@@ -183,26 +183,6 @@ public class CardGameApplication
         {
             activateActionCard(player, card);
         }
-    }
-
-    public void drawTwoCards(Player player)
-    {
-        if(deck.getCardCount() == 1)
-        {
-            Card card = deck.takeCard();
-            player.getHand().dealTo(card);
-
-            System.out.println("The draw deck is empty! Refilling...");
-            deck.refillDeck(discardPile);
-
-            card = deck.takeCard();
-            player.getHand().dealTo(card);
-        }
-        Card card = deck.takeCard();
-        player.getHand().dealTo(card);
-
-        card = deck.takeCard();
-        player.getHand().dealTo(card);
     }
 
     public Card determineWhichCardToPlay(Player player, ArrayList<Card> playableCards)
@@ -229,7 +209,6 @@ public class CardGameApplication
         discardPile.addCard(cardToPlay);
 
         UserInterface.displayCardToPlay(player.getName(), cardToPlay);
-        queuedPlayers.offer(player);
 
         if(cardToPlay instanceof ActionCard)
         {
@@ -275,5 +254,25 @@ public class CardGameApplication
                 ((ActionCard) card).setColor(chosenColor);
             }
         }
+    }
+
+    public void drawTwoCards(Player player)
+    {
+        if(deck.getCardCount() == 1)
+        {
+            Card card = deck.takeCard();
+            player.getHand().dealTo(card);
+
+            System.out.println("The draw deck is empty! Refilling...");
+            deck.refillDeck(discardPile);
+
+            card = deck.takeCard();
+            player.getHand().dealTo(card);
+        }
+        Card card = deck.takeCard();
+        player.getHand().dealTo(card);
+
+        card = deck.takeCard();
+        player.getHand().dealTo(card);
     }
 }

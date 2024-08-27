@@ -140,7 +140,7 @@ public class UserInterface
     {
         System.out.println();
         System.out.println(playerName + " added " + cardToPlay.toString() + " to the discard pile.");
-        waitForUser();
+        // waitForUser();
     }
 
     public static void displayPlayerTurn(String playerName)
